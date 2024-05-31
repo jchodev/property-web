@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import { UIState, State } from "../../model/ui/UIState";
-import { Property } from "../../model/data/PropertyItem";
+import { Property } from "../../model/data/Property";
 import MainViewModel from "./MainViewModel";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
-import {AlertTitle, Divider, LinearProgress,} from "@mui/material";
+import {AlertTitle, Divider, LinearProgress, Button} from "@mui/material";
 import Box from '@mui/material/Box';
 import Header from '../../components/header/Header';
 import OptionsTab from '../../components/OptionsTab';
@@ -13,52 +13,35 @@ import PropertyGrid from '../../components/grid/PropertyGrid';
 
 
 function MainView() {
-    const {propertyState, getProperty} = MainViewModel(); 
-
-    const [properties, setProperties] = useState<Property[] | null>(null);
-    const [shouldShowProgress, setShouldShowProgress] = useState(true);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [shouldShowError, setShouldShowError] = useState(false);
-    
+    const {uiState, getProperty} = MainViewModel(); 
     
     useEffect(() => {
-        if (!propertyState) {
+        if (!uiState) {
             getProperty(0);
             return
         }
 
-        switch (propertyState.responseState) {
+        switch (uiState.state) {
             case State.Loading:
                 console.log("view: loading");
-                setShouldShowProgress(true);
+                //setShouldShowProgress(true);
                 break;
             case State.Success:
                 console.log("view: Success");
-                setShouldShowProgress(false);
-                setShouldShowError(false);
-                setProperties(propertyState.data!);
+                //setShouldShowProgress(false);
+                //setShouldShowError(false);
+               //setProperties(propertyState.data!);
                 break;
             case State.Fail:
-                setShouldShowProgress(false);
-                setShouldShowError(true);
-                setErrorMessage(propertyState.error?.message || null);
+                //setShouldShowProgress(false);
+                //setShouldShowError(true);
+                //setErrorMessage(propertyState.error?.message || null);
                 break;
         }
 
-    }, [propertyState, getProperty]);
+    }, [uiState, getProperty]);
 
     return (
-        // <Container>
-        //     {shouldShowError && <Alert severity="error">
-        //         <AlertTitle>Error</AlertTitle>
-        //         {errorMessage} — <strong>check it out!</strong>
-        //     </Alert>}
-        //     {shouldShowProgress && <LinearProgress color="primary" variant={'query'}/>}
-        //     <SearchInput defaultValue={query} onChange={onSearchItemChange}/>
-        //     <Divider variant="fullWidth" sx={{border: '1px solid light-grey', margin: 2}}/>
-        //     <BookList books={bookList}/>
-        //     <Button variant="text" color="error" onClick={logout}>Logout</Button>
-        // </Container>
         <React.Fragment>
         <Box
           sx={{
@@ -80,8 +63,12 @@ function MainView() {
               overflowY: 'scroll',
             }}
           >            
-            {shouldShowProgress && <LinearProgress color="primary"/>}
-            <PropertyGrid properties = {properties}/>
+            {uiState?.state === State.Loading && <LinearProgress color="primary"/>}
+            {uiState?.data?.properties && <PropertyGrid properties={uiState?.data?.properties} />} 
+
+            <Button onClick={() => getProperty( (uiState?.data?.page.currentPage ?? 0) + 1)}>
+              DIU
+            </Button>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             {/* <FooterMenu /> */}

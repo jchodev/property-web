@@ -8,7 +8,7 @@ export enum State {
 }
 
 export interface UIState<T> {
-    responseState: State;
+    state: State;
     data?: T
     error?: ErrorResponse
 }

@@ -1,38 +1,47 @@
 import React, {useState} from "react";
 import { UIState, State } from "../../model/ui/UIState";
-import { Property } from "../../model/data/PropertyItem"; 
+import { Property } from "../../model/data/Property"; 
+import {Properties} from './data/MainUIData';
 
 
 export default function MainViewModel() {
 
-    const [propertyState, setPropertyState] = useState<UIState<Property[]>>();
+    const [uiState, setUIState] = useState<UIState<Properties>>();
 
     function delay(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     async function getProperty(page: number) {
-        console.log("getProperty: set loading")
+        console.log("getProperty: set loading with page " +page);
 
-        setPropertyState((prevState) => ({
+        setUIState((prevState) => ({
           ...prevState,
-          responseState: State.Loading,
+          state: State.Loading,
         }));
         
         await delay(2000);
-        console.log("getProperty: set Success")
+        console.log("getProperty: set Success");
 
-        setPropertyState((prevState) => ({
+        const newProperties = getPropertyFromApi(page);
+
+         // Combine existing properties with new properties
+        const updatedData = {
+          page: newProperties.page, // Maintain existing page information (if any)
+          properties: [...(uiState?.data?.properties || []), ...newProperties.properties],
+        };
+
+        setUIState((prevState) => ({
           ...prevState,
-          responseState: State.Success,
-          data: getPropertyFromApi(page),
+          state: State.Success,
+          data: updatedData,
         }));
     }
 
-    function getPropertyFromApi(page: number): Property[] {
-      const result: Property[] = [];
+    function getPropertyFromApi(page: number): Properties {
+      const properties: Property[] = [];
       for (let i = page ; i < page + 20; i++) { 
-        result.push({
+        properties.push({
           id: i,
           images: [
             {
@@ -55,11 +64,19 @@ export default function MainViewModel() {
           rating: 4.5,
         });
       }
-      return result;
+
+      return {
+        page: {
+          currentPage: page,
+          totalPage: 20, // Assuming total pages are always 20 for this example
+        },
+        properties,
+      };
+      //return result;
     }
 
     return {
-        propertyState,
+        uiState,
         getProperty
     };  
 }

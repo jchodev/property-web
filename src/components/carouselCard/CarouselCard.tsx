@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import MobileStepper from '@mui/material/MobileStepper';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { Property } from "../../model/data/PropertyItem"; 
+import { Property } from "../../model/data/Property"; 
 
 // mui icons
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
@@ -67,7 +67,7 @@ const CarouselCard: React.FC<CarouselCardProps> = ({ property }) => {
           {property.images.map((step, index) => {
             return (
               <SwiperSlide>
-              <div key={step.url}>
+              <div key={property.id + step.url}>
                 <Box
                   component="img"
                   sx={carouselImage}

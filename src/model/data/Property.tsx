@@ -1,10 +1,10 @@
-export interface Image {
+export interface PropertyImage {
     url: string;
 }
 
 export interface Property {
     id: number;
-    images: Image[];
+    images: PropertyImage[];
     location: string;
     days: string;
     price: string;

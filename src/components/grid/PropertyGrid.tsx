@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import CarouselCard from '../carouselCard/CarouselCard';
-import { Property } from '../../model/data/PropertyItem';
+import { Property } from '../../model/data/Property';
 
 interface PropertyGridProps {
   properties: Property[] | null;
