@@ -5,13 +5,20 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import MainView from './pages/main/MainView';
 
+
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  isDevelopment ? (
+    <React.StrictMode>
+      <MainView />
+    </React.StrictMode>
+  ) : (
     <MainView />
-  </React.StrictMode>
+  )
 );
 
 // If you want to start measuring performance in your app, pass a function

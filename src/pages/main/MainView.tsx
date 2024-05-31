@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import { UIState, State } from "../../model/ui/UIState";
-import { Property } from "../../model/main/PropertyItem";
+import { Property } from "../../model/data/PropertyItem";
 import MainViewModel from "./MainViewModel";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import Header from '../../components/header/Header';
 import OptionsTab from '../../components/OptionsTab';
 import { displayOnDesktop } from '../../styles/CommonStyles';
+import PropertyGrid from '../../components/grid/PropertyGrid';
 
 
 function MainView() {
@@ -80,7 +81,7 @@ function MainView() {
             }}
           >            
             {shouldShowProgress && <LinearProgress color="primary"/>}
-            {/* <PropertyGrid properties = {properties}/> */}
+            <PropertyGrid properties = {properties}/>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             {/* <FooterMenu /> */}

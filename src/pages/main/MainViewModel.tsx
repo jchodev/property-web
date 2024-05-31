@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { UIState, State } from "../../model/ui/UIState";
-import { Property } from "../../model/main/PropertyItem"; 
+import { Property } from "../../model/data/PropertyItem"; 
 
 
 export default function MainViewModel() {
@@ -13,13 +13,20 @@ export default function MainViewModel() {
 
     async function getProperty(page: number) {
         console.log("getProperty: set loading")
-        setPropertyState({ responseState: State.Loading });
+
+        setPropertyState((prevState) => ({
+          ...prevState,
+          responseState: State.Loading,
+        }));
+        
         await delay(2000);
         console.log("getProperty: set Success")
-        setPropertyState({
-            responseState: State.Success,
-            data: getPropertyFromApi(page),
-        });
+
+        setPropertyState((prevState) => ({
+          ...prevState,
+          responseState: State.Success,
+          data: getPropertyFromApi(page),
+        }));
     }
 
     function getPropertyFromApi(page: number): Property[] {
