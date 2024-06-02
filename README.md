@@ -55,3 +55,4 @@ npm install @mui/material @emotion/react @emotion/styled
 npm install @mui/icons-material
 yarn add react-icons
 yarn add swiper
+npm install @types/lodash.debounce

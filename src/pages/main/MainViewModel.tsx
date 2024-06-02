@@ -1,10 +1,15 @@
 import React, {useState} from "react";
 import { UIState, State } from "../../model/ui/UIState";
-import { Property } from "../../model/data/Property"; 
-import {Properties} from './data/MainUIData';
+import { Property, Properties } from "../../model/data/Property"; 
+import { PropertyRepository } from "../../repository/PropertyRepository";
+import { providePropertyRepository } from "../../di/PropertyModule";
+import debounce from "lodash/debounce";
 
 
 export default function MainViewModel() {
+
+    //di
+    const propertyRepository: PropertyRepository = providePropertyRepository();
 
     const [uiState, setUIState] = useState<UIState<Properties>>();
 
@@ -12,67 +17,38 @@ export default function MainViewModel() {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async function getProperty(page: number) {
-        console.log("getProperty: set loading with page " +page);
+    const debouncedFetch = debounce((page: number) => { 
+      console.log("getProperty: set loading with page " +page);
 
-        setUIState((prevState) => ({
-          ...prevState,
-          state: State.Loading,
-        }));
-        
-        await delay(2000);
-        console.log("getProperty: set Success");
+      setUIState((prevState) => ({
+        ...prevState,
+        state: State.Loading,
+      }));
+      
+      console.log("getProperty: set Success");
 
-        const newProperties = getPropertyFromApi(page);
+      propertyRepository.getPropetiessByPage(page = page).then( (response) => {
+        const newProperties = response.data;
 
-         // Combine existing properties with new properties
-        const updatedData = {
-          page: newProperties.page, // Maintain existing page information (if any)
-          properties: [...(uiState?.data?.properties || []), ...newProperties.properties],
-        };
+        if (newProperties!=null){
+          // Combine existing properties with new properties
+          const updatedData = {
+            page: newProperties?.page, // Maintain existing page information (if any)
+            properties: [...(uiState?.data?.properties || []), ...newProperties?.properties],
+          };
 
-        setUIState((prevState) => ({
-          ...prevState,
-          state: State.Success,
-          data: updatedData,
-        }));
-    }
+          setUIState((prevState) => ({
+            ...prevState,
+            state: State.Success,
+            data: updatedData,
+          }));
+        }
 
-    function getPropertyFromApi(page: number): Properties {
-      const properties: Property[] = [];
-      for (let i = page ; i < page + 20; i++) { 
-        properties.push({
-          id: i,
-          images: [
-            {
-              url: 'https://images.unsplash.com/photo-1600240644455-3edc55c375fe?auto=format&fit=crop&w=400&h=250&q=60',
-            },
-            {
-              url: 'https://images.unsplash.com/photo-1653408400816-af6dba0c9432?auto=format&fit=crop&w=400&h=250&q=60',
-            },
-            {
-              url: 'https://images.unsplash.com/photo-1653312727964-736f11663ef6?auto=format&fit=crop&w=400&h=250&q=80',
-            },
-            {
-              url: 'https://images.unsplash.com/photo-1629447236132-22c57cd0f0bf?auto=format&fit=crop&w=400&h=250&q=60',
-            },
-          ],
-          location: 'Gardon Reveira, Italy',
-          days: 'Oct 2-9',
-          price: '$14,999 CAD night',
-          isNew: true,
-          rating: 4.5,
-        });
-      }
+      })
+    }, 500);
 
-      return {
-        page: {
-          currentPage: page,
-          totalPage: 20, // Assuming total pages are always 20 for this example
-        },
-        properties,
-      };
-      //return result;
+    function getProperty(page : number) {
+      debouncedFetch(page);
     }
 
     return {

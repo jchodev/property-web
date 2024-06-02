@@ -11,3 +11,15 @@ export interface Property {
     isNew: boolean;
     rating: number;
 }
+
+
+export interface Page{
+    currentPage: number;
+    totalPage: number;
+}
+
+export interface Properties {
+    page: Page;
+    properties: Property[];    
+}
+
