@@ -67,12 +67,12 @@ const CarouselCard: React.FC<CarouselCardProps> = ({ property }) => {
           {property.images.map((step, index) => {
             return (
               <SwiperSlide>
-              <div key={property.id + step.url}>
+              <div key={property.id + step.imageUrl}>
                 <Box
                   component="img"
                   sx={carouselImage}
-                  src={step.url}
-                  alt={step.url}
+                  src={step.imageUrl}
+                  alt={step.imageUrl}
                 ></Box>
               </div>
               </SwiperSlide>
@@ -84,13 +84,13 @@ const CarouselCard: React.FC<CarouselCardProps> = ({ property }) => {
 
       <Box sx={flexBetween}>
         <Box sx={{ mt: 2 }}>
-          <Typography component="h3"> {property.location}</Typography>
-          <Typography component="h4"> {property.days}</Typography>
+          <Typography component="h3"> {property.title}</Typography>
+          {/* <Typography component="h4"> {property.days}</Typography> */}
           <Typography component="h5"> {property.price}</Typography>
         </Box>
         <Box sx={{ mt: 2 }}>
           <Box sx={dFlex}>
-            {property.isNew ? (
+            {/* {property.isNew ? (
               <React.Fragment>
                 <Typography component="h5">New</Typography>
                 <AiFillStar size={18} />
@@ -100,7 +100,11 @@ const CarouselCard: React.FC<CarouselCardProps> = ({ property }) => {
                 <Typography component="h5"> {property.rating}</Typography>
                 <AiFillStar size={18} />
               </React.Fragment>
-            )}
+            )} */}
+              <React.Fragment>
+                <Typography component="h5">??</Typography>
+                <AiFillStar size={18} />
+              </React.Fragment>
           </Box>
         </Box>
       </Box>

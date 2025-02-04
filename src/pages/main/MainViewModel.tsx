@@ -1,17 +1,16 @@
 import React, {useState} from "react";
 import { UIState, State } from "../../model/ui/UIState";
-import { Property, Properties } from "../../model/data/Property"; 
+import { PropertiePagination, Property } from "../../model/data/Property"; 
 import { PropertyRepository } from "../../repository/PropertyRepository";
 import { providePropertyRepository } from "../../di/PropertyModule";
 import debounce from "lodash/debounce";
-
 
 export default function MainViewModel() {
 
     //di
     const propertyRepository: PropertyRepository = providePropertyRepository();
 
-    const [uiState, setUIState] = useState<UIState<Properties>>();
+    const [uiState, setUIState] = useState<UIState<PropertiePagination>>();
 
     function delay(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -27,14 +26,11 @@ export default function MainViewModel() {
       
       console.log("getProperty: set Success");
 
-      propertyRepository.getPropetiessByPage(page = page).then( (response) => {
-        const newProperties = response.data;
-
-        if (newProperties!=null){
-          // Combine existing properties with new properties
+      propertyRepository.getPropeties(1, 10, undefined, undefined).then( (result) => {
+        if (result!=null){
           const updatedData = {
-            page: newProperties?.page, // Maintain existing page information (if any)
-            properties: [...(uiState?.data?.properties || []), ...newProperties?.properties],
+            pagination: result.pagination,
+            properties: [...(uiState?.data?.properties || []), ...result.properties],
           };
 
           setUIState((prevState) => ({
@@ -48,6 +44,7 @@ export default function MainViewModel() {
     }, 500);
 
     function getProperty(page : number) {
+      console.log("page: "+ page);
       debouncedFetch(page);
     }
 

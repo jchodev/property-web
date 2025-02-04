@@ -1,25 +1,24 @@
+import { PaginationResponse } from "../api/PaginationResponse";
+
 export interface PropertyImage {
-    url: string;
+    imageUrl: string;
 }
 
 export interface Property {
-    id: number;
+    id: string;
+    title: string;
+    description: string;
+    type: string;
+    roomCount: number;
+    bathRoomCount: number;
+    price: number;
+    longitude: number;
+    latitudes: number;
+    regions: string[];
     images: PropertyImage[];
-    location: string;
-    days: string;
-    price: string;
-    isNew: boolean;
-    rating: number;
 }
 
-
-export interface Page{
-    currentPage: number;
-    totalPage: number;
+export interface PropertiePagination {
+    properties: Property[];
+    pagination: PaginationResponse;
 }
-
-export interface Properties {
-    page: Page;
-    properties: Property[];    
-}
-

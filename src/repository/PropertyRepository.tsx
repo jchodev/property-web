@@ -1,6 +1,6 @@
-import { Property, Properties } from "../model/data/Property"; 
-import { Response } from "../model/api/Reponse"
+import { PropertiePagination } from "../model/data/Property"; 
+import { Response } from "../model/api/Response"
 
 export interface PropertyRepository {
-    getPropetiessByPage(page: number): Promise<Response<Properties>>;
+    getPropeties(page: number, pageSize: number, sorters?: any, filters?: any): Promise<PropertiePagination>;
 }
